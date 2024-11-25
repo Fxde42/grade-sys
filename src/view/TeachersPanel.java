@@ -1,6 +1,9 @@
 package view;
 
 import java.awt.AWTEvent;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -22,16 +25,19 @@ public class TeachersPanel extends JFrame implements ActionListener {
 	 */
 	String idd;
 	JPanel contain;
-	JButton infoButton, gradeButton, courseButton, editButton, courseView, sortGrade, logoutButton; // 添加退出登录按钮
+	JButton infoButton, gradeButton, courseButton, editButton, courseView, sortGrade, logoutButton;
 
 	public TeachersPanel(String idd) {
 		super("教师");
 		this.idd = idd;
-		setLocation(300, 200);
-		setSize(300, 380); // 调整高度以容纳新按钮
+		setLocation(500, 300);
+		setSize(300, 380);
+
 		contain = new JPanel();
-		contain.setLayout(null);
-		add(contain);
+		contain.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		infoButton = new JButton("信息查询");
 		gradeButton = new JButton("成绩登录");
@@ -39,23 +45,29 @@ public class TeachersPanel extends JFrame implements ActionListener {
 		editButton = new JButton("修改信息");
 		courseView = new JButton("开课");
 		sortGrade = new JButton("成绩统计");
-		logoutButton = new JButton("退出登录"); // 新增退出登录按钮
+		logoutButton = new JButton("退出登录");
 
-		infoButton.setBounds(70, 30, 140, 30);
-		editButton.setBounds(70, 70, 140, 30);
-		courseView.setBounds(70, 110, 140, 30);
-		courseButton.setBounds(70, 150, 140, 30);
-		gradeButton.setBounds(70, 190, 140, 30);
-		sortGrade.setBounds(70, 230, 140, 30);
-		logoutButton.setBounds(70, 270, 140, 30); // 设置位置
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		contain.add(infoButton, gbc);
 
-		contain.add(infoButton);
-		contain.add(gradeButton);
-		contain.add(courseView);
-		contain.add(courseButton);
-		contain.add(editButton);
-		contain.add(sortGrade);
-		contain.add(logoutButton); // 添加到面板中
+		gbc.gridy = 1;
+		contain.add(editButton, gbc);
+
+		gbc.gridy = 2;
+		contain.add(courseView, gbc);
+
+		gbc.gridy = 3;
+		contain.add(courseButton, gbc);
+
+		gbc.gridy = 4;
+		contain.add(gradeButton, gbc);
+
+		gbc.gridy = 5;
+		contain.add(sortGrade, gbc);
+
+		gbc.gridy = 6;
+		contain.add(logoutButton, gbc);
 
 		infoButton.addActionListener(this);
 		gradeButton.addActionListener(this);
@@ -64,13 +76,14 @@ public class TeachersPanel extends JFrame implements ActionListener {
 		editButton.addActionListener(this);
 		sortGrade.addActionListener(this);
 
-		logoutButton.addActionListener(new ActionListener() { // 退出登录按钮的监听
+		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose(); // 关闭当前窗口
-				new MainFrame(); // 返回登录主界面
+				dispose();
+				new MainFrame();
 			}
 		});
 
+		add(contain);
 		setVisible(true);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}

@@ -1,6 +1,9 @@
 package view;
 
 import java.awt.AWTEvent;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -26,30 +29,41 @@ public class StudentsPanel extends JFrame implements ActionListener {
 	public StudentsPanel(String id) {
 		super("学生");
 		this.id = id;
-		setLocation(300, 200);
+		setLocation(500, 300);
 		setSize(300, 340);
+
 		contain = new JPanel();
-		contain.setLayout(null);
-		add(contain);
+		contain.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
 		infoButton = new JButton("信息查询");
 		gradeButton = new JButton("成绩查询");
 		courseButton = new JButton("课程查询");
 		editButton = new JButton("修改信息");
-		exitButton = new JButton("退出登录"); // 修改按钮文字
-		infoButton.setBounds(70, 40, 140, 30);
-		gradeButton.setBounds(70, 80, 140, 30);
-		courseButton.setBounds(70, 120, 140, 30);
-		editButton.setBounds(70, 160, 140, 30);
-		exitButton.setBounds(70, 200, 140, 30);
-		contain.add(infoButton);
+		exitButton = new JButton("退出登录");
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		contain.add(infoButton, gbc);
+
+		gbc.gridy = 1;
+		contain.add(gradeButton, gbc);
+
+		gbc.gridy = 2;
+		contain.add(courseButton, gbc);
+
+		gbc.gridy = 3;
+		contain.add(editButton, gbc);
+
+		gbc.gridy = 4;
+		contain.add(exitButton, gbc);
+
 		infoButton.addActionListener(this);
-		contain.add(gradeButton);
 		gradeButton.addActionListener(this);
-		contain.add(courseButton);
 		courseButton.addActionListener(this);
-		contain.add(editButton);
 		editButton.addActionListener(this);
-		contain.add(exitButton);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 关闭当前窗口
@@ -58,6 +72,8 @@ public class StudentsPanel extends JFrame implements ActionListener {
 				new MainFrame();
 			}
 		});
+
+		add(contain);
 		setVisible(true);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}

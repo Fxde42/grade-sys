@@ -1,6 +1,9 @@
 package view;
 
 import java.awt.AWTEvent;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -15,55 +18,59 @@ import controller.EditInfo;
 
 @SuppressWarnings("serial")
 public class AdministratorPanel extends JFrame implements ActionListener {
-	/*
-	 * 管理员登陆后操作主界面
-	 */
-	JButton deleteUser, addUser, selfInfo, logoutButton; // 添加退出登录按钮
+	JButton deleteUser, addUser, selfInfo, logoutButton;
 	JPanel contain;
 	String idd;
 
 	public AdministratorPanel(String idd) {
 		super("系统管理员");
 		this.idd = idd;
-		setLocation(300, 200);
+		setLocation(500, 300);
 		setSize(300, 340);
+
 		contain = new JPanel();
-		contain.setLayout(null);
-		add(contain);
+		contain.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		selfInfo = new JButton("修改信息");
 		addUser = new JButton("增加用户");
 		deleteUser = new JButton("删除用户");
-		logoutButton = new JButton("退出登录"); // 新增按钮
+		logoutButton = new JButton("退出登录");
 
-		selfInfo.setBounds(70, 45, 140, 30);
-		addUser.setBounds(70, 100, 140, 30);
-		deleteUser.setBounds(70, 155, 140, 30);
-		logoutButton.setBounds(70, 210, 140, 30); // 设置位置
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		contain.add(selfInfo, gbc);
 
-		contain.add(selfInfo);
-		contain.add(addUser);
-		contain.add(deleteUser);
-		contain.add(logoutButton); // 添加到面板中
+		gbc.gridy = 1;
+		contain.add(addUser, gbc);
+
+		gbc.gridy = 2;
+		contain.add(deleteUser, gbc);
+
+		gbc.gridy = 3;
+		contain.add(logoutButton, gbc);
 
 		selfInfo.addActionListener(this);
 		addUser.addActionListener(this);
 		deleteUser.addActionListener(this);
-		logoutButton.addActionListener(new ActionListener() { // 为退出登录按钮添加事件监听
+		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// 销毁当前窗口并返回主界面
 				dispose();
 				new MainFrame();
 			}
 		});
 
+		add(contain);
 		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addUser) {
-			new AddUser();    // 用户密码初始化统一为123456
+			new AddUser();
 		} else if (e.getSource() == deleteUser) {
 			new DeleteUser();
 		} else if (e.getSource() == selfInfo) {

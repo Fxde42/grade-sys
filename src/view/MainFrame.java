@@ -32,8 +32,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	public MainFrame() {
 		super("账号登陆");
-		setLocation(300, 200);
-		setSize(300, 340);
+		setLocation(500, 300);
+		setSize(500, 378);
 
 		// 使用自定义的BackgroundPanel
 		InputStream input = getClass().getClassLoader().getResourceAsStream("Uestc.jpg");
