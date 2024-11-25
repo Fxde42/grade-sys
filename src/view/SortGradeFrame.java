@@ -80,7 +80,7 @@ public class SortGradeFrame extends JFrame implements ActionListener {
 		submit.addActionListener(this);
 		add(contain);
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	@Override
