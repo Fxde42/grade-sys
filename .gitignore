@@ -1,6 +1,7 @@
 # 编译输出
 /target/
 *.class
+out/
 
 # IDE 文件
 *.iml

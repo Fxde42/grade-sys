@@ -14,8 +14,6 @@ import controller.EditInfo;
 import controller.GradeInfo;
 import controller.Info;
 
-
-
 @SuppressWarnings("serial")
 public class StudentsPanel extends JFrame implements ActionListener {
 	/*
@@ -23,7 +21,7 @@ public class StudentsPanel extends JFrame implements ActionListener {
 	 */
 	JPanel contain;
 	String id;
-	JButton infoButton, gradeButton, courseButton, editButton;
+	JButton infoButton, gradeButton, courseButton, editButton, exitButton;
 
 	public StudentsPanel(String id) {
 		super("学生");
@@ -37,10 +35,12 @@ public class StudentsPanel extends JFrame implements ActionListener {
 		gradeButton = new JButton("成绩查询");
 		courseButton = new JButton("课程查询");
 		editButton = new JButton("修改信息");
+		exitButton = new JButton("退出登录"); // 修改按钮文字
 		infoButton.setBounds(70, 40, 140, 30);
 		gradeButton.setBounds(70, 80, 140, 30);
 		courseButton.setBounds(70, 120, 140, 30);
 		editButton.setBounds(70, 160, 140, 30);
+		exitButton.setBounds(70, 200, 140, 30);
 		contain.add(infoButton);
 		infoButton.addActionListener(this);
 		contain.add(gradeButton);
@@ -49,6 +49,15 @@ public class StudentsPanel extends JFrame implements ActionListener {
 		courseButton.addActionListener(this);
 		contain.add(editButton);
 		editButton.addActionListener(this);
+		contain.add(exitButton);
+		exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// 关闭当前窗口
+				dispose();
+				// 返回到主界面
+				new MainFrame();
+			}
+		});
 		setVisible(true);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}

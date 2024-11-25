@@ -16,11 +16,10 @@ import javax.swing.JTextField;
 
 import controller.CheckInfo;
 
+import java.awt.*;
+import java.io.InputStream;
 
 public class MainFrame extends JFrame implements ActionListener {
-	/**
-	 * 登陆主界面
-	 */
 	private static final long serialVersionUID = 1L;
 	JTextField idTextField;
 	JPasswordField passwdTextField;
@@ -28,47 +27,63 @@ public class MainFrame extends JFrame implements ActionListener {
 	Choice chooice;
 	JButton logon;
 	JPanel contain;
-	
+
 	int count = 0;
 
 	public MainFrame() {
 		super("账号登陆");
 		setLocation(300, 200);
 		setSize(300, 340);
-		contain = new JPanel();
-		contain.setLayout(null);
+
+		// 使用自定义的BackgroundPanel
+		InputStream input = getClass().getClassLoader().getResourceAsStream("Uestc.jpg");
+		BackgroundPanel backgroundPanel = new BackgroundPanel(input);
+		backgroundPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5);
+
 		idLabel = new JLabel("ID号");
 		passwdLabel = new JLabel("密码");
-		idTextField = new JTextField();
-		passwdTextField = new JPasswordField();
+		idTextField = new JTextField(15);
+		passwdTextField = new JPasswordField(15);
 		logon = new JButton("登陆");
 		chooice = new Choice();
 		chooice.addItem("学生");
 		chooice.addItem("教师");
-		// chooice.addItem("教务员");
 		chooice.addItem("系统管理员");
-		idLabel.setBounds(42, 45, 75, 35);
-		idTextField.setBounds(80, 45, 150, 35);
-		passwdLabel.setBounds(40, 100, 75, 35);
-		passwdTextField.setBounds(80, 100, 150, 35);
-		chooice.setBounds(80, 160, 150, 35);
-		logon.setBounds(102, 220, 70, 30);
-		contain.add(idLabel);
-		contain.add(idTextField);
-		contain.add(passwdLabel);
-		contain.add(passwdTextField);
-		contain.add(chooice);
-		contain.add(logon);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		backgroundPanel.add(idLabel, gbc);
+		gbc.gridx = 1;
+		backgroundPanel.add(idTextField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		backgroundPanel.add(passwdLabel, gbc);
+		gbc.gridx = 1;
+		backgroundPanel.add(passwdTextField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		backgroundPanel.add(new JLabel("角色:"), gbc);
+		gbc.gridx = 1;
+		backgroundPanel.add(chooice, gbc);
+
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		backgroundPanel.add(logon, gbc);
+
 		logon.addActionListener(this);
-		add(contain);
+		add(backgroundPanel);
 		setVisible(true);
-		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == logon) {
 			String ch = (String) chooice.getSelectedItem();
-			if (ch == "学生") {
+			if (ch.equals("学生")) {
 				if ((new CheckInfo().isMember("student", idTextField.getText(),
 						new String(passwdTextField.getPassword()))) == 1) {
 					setVisible(false);
@@ -87,7 +102,7 @@ public class MainFrame extends JFrame implements ActionListener {
 						System.exit(0);
 					}
 				}
-			} else if (ch == "教师") {
+			} else if (ch.equals("教师")) {
 				if ((new CheckInfo().isMember("teacher", idTextField.getText(),
 						new String(passwdTextField.getPassword(), 0,
 								passwdTextField.getPassword().length))) == 1) {
@@ -107,7 +122,7 @@ public class MainFrame extends JFrame implements ActionListener {
 						System.exit(0);
 					}
 				}
-			} else if (ch == "系统管理员") {
+			} else if (ch.equals("系统管理员")) {
 				if ((new CheckInfo().isMember("administrator", idTextField
 						.getText(), new String(passwdTextField.getPassword(),
 						0, passwdTextField.getPassword().length))) == 1) {
@@ -129,10 +144,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 		}
-		
 	}
-
-	
 
 	public void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {

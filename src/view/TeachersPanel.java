@@ -15,56 +15,62 @@ import controller.EditInfo;
 import controller.GradeEnter;
 import controller.Info;
 
-
 @SuppressWarnings("serial")
 public class TeachersPanel extends JFrame implements ActionListener {
 	/*
 	 * 教师登陆后操作主界面
 	 */
-	
 	String idd;
 	JPanel contain;
-	JButton infoButton, gradeButton, courseButton, editButton, courseView, sortGrade;
+	JButton infoButton, gradeButton, courseButton, editButton, courseView, sortGrade, logoutButton; // 添加退出登录按钮
 
 	public TeachersPanel(String idd) {
 		super("教师");
 		this.idd = idd;
 		setLocation(300, 200);
-		setSize(300, 340);
+		setSize(300, 380); // 调整高度以容纳新按钮
 		contain = new JPanel();
 		contain.setLayout(null);
 		add(contain);
+
 		infoButton = new JButton("信息查询");
 		gradeButton = new JButton("成绩登录");
 		courseButton = new JButton("全部课程");
 		editButton = new JButton("修改信息");
 		courseView = new JButton("开课");
-		
 		sortGrade = new JButton("成绩统计");
-		
-		infoButton.setBounds(70, 40, 140, 30);
-		editButton.setBounds(70, 80, 140, 30);
-		courseView.setBounds(70, 120, 140, 30);
-		courseButton.setBounds(70, 160, 140, 30);
-		gradeButton.setBounds(70, 200, 140, 30);
-		
-		sortGrade.setBounds(70, 240, 140, 30);
-		
+		logoutButton = new JButton("退出登录"); // 新增退出登录按钮
+
+		infoButton.setBounds(70, 30, 140, 30);
+		editButton.setBounds(70, 70, 140, 30);
+		courseView.setBounds(70, 110, 140, 30);
+		courseButton.setBounds(70, 150, 140, 30);
+		gradeButton.setBounds(70, 190, 140, 30);
+		sortGrade.setBounds(70, 230, 140, 30);
+		logoutButton.setBounds(70, 270, 140, 30); // 设置位置
+
 		contain.add(infoButton);
-		infoButton.addActionListener(this);
 		contain.add(gradeButton);
-		gradeButton.addActionListener(this);
 		contain.add(courseView);
-		courseView.addActionListener(this);
 		contain.add(courseButton);
-		courseButton.addActionListener(this);
 		contain.add(editButton);
-		editButton.addActionListener(this);
-		
 		contain.add(sortGrade);
+		contain.add(logoutButton); // 添加到面板中
+
+		infoButton.addActionListener(this);
+		gradeButton.addActionListener(this);
+		courseView.addActionListener(this);
+		courseButton.addActionListener(this);
+		editButton.addActionListener(this);
 		sortGrade.addActionListener(this);
-		
-		
+
+		logoutButton.addActionListener(new ActionListener() { // 退出登录按钮的监听
+			public void actionPerformed(ActionEvent e) {
+				dispose(); // 关闭当前窗口
+				new MainFrame(); // 返回登录主界面
+			}
+		});
+
 		setVisible(true);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}
@@ -72,20 +78,15 @@ public class TeachersPanel extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == infoButton) {
 			new Info(idd, 0);
-		}
-		if (e.getSource() == gradeButton) {
+		} else if (e.getSource() == gradeButton) {
 			new GradeEnter(idd);
-		}
-		if (e.getSource() == courseButton) {  
+		} else if (e.getSource() == courseButton) {
 			new CourseView(idd, 1);
-		}
-		if (e.getSource() == editButton) {
+		} else if (e.getSource() == editButton) {
 			new EditInfo(idd, 1);
-		}
-		if (e.getSource() == courseView) {
+		} else if (e.getSource() == courseView) {
 			new AddCourse();
-		}
-		if(e.getSource() == sortGrade){
+		} else if (e.getSource() == sortGrade) {
 			new SortGradeFrame();
 		}
 	}
