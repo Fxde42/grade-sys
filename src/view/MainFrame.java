@@ -36,8 +36,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		setSize(500, 378);
 
 		// 使用自定义的BackgroundPanel
-		InputStream input = getClass().getClassLoader().getResourceAsStream("Uestc.jpg");
-		BackgroundPanel backgroundPanel = new BackgroundPanel(input);
+		BackgroundPanel backgroundPanel = new BackgroundPanel("data/Uestc.jpg");
 		backgroundPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(5, 5, 5, 5);

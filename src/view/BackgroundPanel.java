@@ -2,21 +2,21 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
 
-    // 构造方法：接受 InputStream
-    public BackgroundPanel(InputStream inputStream) {
+    // 构造方法：接受文件路径
+    public BackgroundPanel(String filePath) {
         try {
-            if (inputStream != null) {
-                // 从 InputStream 读取图片
-                backgroundImage = ImageIO.read(inputStream);
+            if (filePath != null && !filePath.isEmpty()) {
+                // 使用文件路径读取图片
+                backgroundImage = ImageIO.read(new File(filePath));
             } else {
-                throw new IllegalArgumentException("输入流为空，无法加载背景图片！");
+                throw new IllegalArgumentException("文件路径为空，无法加载背景图片！");
             }
         } catch (IOException e) {
             e.printStackTrace();
