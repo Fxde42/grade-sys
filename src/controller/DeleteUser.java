@@ -128,7 +128,7 @@ public class DeleteUser extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		new DeleteUser();
-	}
+//	public static void main(String[] args) {
+//		new DeleteUser();
+//	}
 }

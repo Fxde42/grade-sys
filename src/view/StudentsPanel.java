@@ -86,8 +86,8 @@ public class StudentsPanel extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		// 测试界面
-		new StudentsPanel("testStudentID");
-	}
+//	public static void main(String[] args) {
+//		// 测试界面
+//		new StudentsPanel("testStudentID");
+//	}
 }

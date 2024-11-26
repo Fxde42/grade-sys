@@ -164,7 +164,7 @@ public class SortGradeFrame extends JFrame implements ActionListener {
 		resultFrame.setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		new SortGradeFrame();
-	}
+//	public static void main(String[] args) {
+//		new SortGradeFrame();
+//	}
 }

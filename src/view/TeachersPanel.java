@@ -104,8 +104,8 @@ public class TeachersPanel extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		// 测试界面
-		new TeachersPanel("testTeacherID");
-	}
+//	public static void main(String[] args) {
+//		// 测试界面
+//		new TeachersPanel("testTeacherID");
+//	}
 }

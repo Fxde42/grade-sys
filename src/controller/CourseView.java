@@ -35,7 +35,7 @@ public class CourseView extends JFrame {
 		String[] headers = {"课程编号", "课程名", "学分", "学时"};
 		for (String header : headers) {
 			JLabel label = new JLabel(header, SwingConstants.CENTER);
-			label.setFont(new Font("Arial", Font.BOLD, 16)); // 表头字体
+			label.setFont(new Font("Microsoft YaHei", Font.BOLD, 16)); // 表头字体
 			headerPanel.add(label);
 		}
 
@@ -151,9 +151,9 @@ public class CourseView extends JFrame {
 		contain.add(dataPanel); // 将每一行数据添加到面板中
 	}
 
-	public static void main(String[] args) {
-		// 测试界面
-		new CourseView("testStudentID", 0); // 学生查询课程
-		// new CourseView("testTeacherID", 1); // 教师查询课程
-	}
+//	public static void main(String[] args) {
+//		// 测试界面
+//		new CourseView("testStudentID", 0); // 学生查询课程
+//		// new CourseView("testTeacherID", 1); // 教师查询课程
+//	}
 }

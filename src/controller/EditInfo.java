@@ -162,9 +162,9 @@ public class EditInfo extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		// 测试界面
-		new EditInfo("testStudentID", 0); // 学生修改信息
-		// new EditInfo("testTeacherID", 1); // 教师修改信息
-	}
+//	public static void main(String[] args) {
+//		// 测试界面
+//		new EditInfo("testStudentID", 0); // 学生修改信息
+//		// new EditInfo("testTeacherID", 1); // 教师修改信息
+//	}
 }

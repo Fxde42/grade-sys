@@ -165,7 +165,7 @@ public class AddCourse extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		new AddCourse();
-	}
+//	public static void main(String[] args) {
+//		new AddCourse();
+//	}
 }

@@ -36,7 +36,7 @@ public class GradeInfo extends JFrame {
 		String[] headers = {"课程号", "课程名", "教师工号", "教师姓名", "学号", "学生姓名", "成绩"};
 		for (String header : headers) {
 			JLabel label = new JLabel(header, SwingConstants.CENTER);
-			label.setFont(new Font("Arial", Font.BOLD, 16)); // 表头字体
+			label.setFont(new Font("Microsoft YaHei", Font.BOLD, 16)); // 表头字体
 			headerPanel.add(label);
 		}
 
@@ -70,7 +70,7 @@ public class GradeInfo extends JFrame {
 						// 添加数据内容到面板
 						for (String data : result) {
 							JLabel dataLabel = new JLabel(data, SwingConstants.CENTER);
-							dataLabel.setFont(new Font("Arial", Font.PLAIN, 14)); // 设置内容字体
+							dataLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14)); // 设置内容字体
 							dataPanel.add(dataLabel);
 						}
 
@@ -88,8 +88,8 @@ public class GradeInfo extends JFrame {
 		setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		// 测试界面
-		new GradeInfo("testStudentID"); // 使用具体的学生ID来测试
-	}
+//	public static void main(String[] args) {
+//		// 测试界面
+//		new GradeInfo("testStudentID"); // 使用具体的学生ID来测试
+//	}
 }
