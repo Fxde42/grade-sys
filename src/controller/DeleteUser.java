@@ -1,38 +1,22 @@
 package controller;
 
-import java.awt.AWTEvent;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class DeleteUser extends JFrame implements ActionListener {
-	/**
-	 * 管理员删除用户
-	 */
 	private static final long serialVersionUID = 1L;
-	JPanel contain;
-	JLabel id;
-	JTextField idt;
-	JComboBox<String> comboBox;
-	JButton submit;
+	// 面板和组件
+	private JPanel contain;
+	private JLabel idLabel, roleLabel;
+	private JTextField idField;
+	private JComboBox<String> roleComboBox;
+	private JButton submitButton;
 
-	String file = System.getProperty("user.dir") + "/data/";
+	private String filePath = System.getProperty("user.dir") + "/data/";
 
 	public DeleteUser() {
 		super("删除用户");
@@ -42,101 +26,109 @@ public class DeleteUser extends JFrame implements ActionListener {
 		// 使用 GridBagLayout 布局管理器
 		contain = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5); // 设置组件的间距
 
-		comboBox = new JComboBox<>(new String[] { "学生", "教师", "教务员" });
+		// 初始化组件
+		idLabel = new JLabel("帐号");
+		roleLabel = new JLabel("角色");
+		idField = new JTextField(15);
+		roleComboBox = new JComboBox<>(new String[] { "学生", "教师", "教务员" });
+		submitButton = new JButton("提交");
 
-		id = new JLabel("帐号");
-		idt = new JTextField(15);
-		submit = new JButton("提交");
-
-		// 设置组件的布局位置
+		// 设置布局和组件位置
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		contain.add(id, gbc);
+		contain.add(idLabel, gbc);
 
 		gbc.gridx = 1;
-		contain.add(idt, gbc);
+		contain.add(idField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		contain.add(new JLabel("角色"), gbc);
+		contain.add(roleLabel, gbc);
 
 		gbc.gridx = 1;
-		contain.add(comboBox, gbc);
+		contain.add(roleComboBox, gbc);
 
 		gbc.gridx = 1;
 		gbc.gridy = 2;
-		contain.add(submit, gbc);
+		contain.add(submitButton, gbc);
 
-		submit.addActionListener(this);
+		// 添加按钮的事件监听器
+		submitButton.addActionListener(this);
 
+		// 将面板添加到框架中
 		add(contain);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
-		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == submit) {
-			String ch = (String) comboBox.getSelectedItem();
-			if (ch.equals("学生")) {
-				if ((new CheckInfo().isMember("student", idt.getText(), "000") == 2)) {
-					file = file + "student.txt";
-					deleteUserFromFile(file);
-					JOptionPane.showMessageDialog(null, "删除学生成功", "提示", JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(null, "此学生不存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
-				}
-			} else if (ch.equals("教师")) {
-				if ((new CheckInfo().isMember("teacher", idt.getText(), "000") == 2)) {
-					file = file + "teacher.txt";
-					deleteUserFromFile(file);
-					JOptionPane.showMessageDialog(null, "删除教师成功", "提示", JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(null, "此教师不存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
-				}
-			} else if (ch.equals("教务员")) {
-				if ((new CheckInfo().isMember("administrator", idt.getText(), "000") == 2)) {
-					file = file + "administrator.txt";
-					deleteUserFromFile(file);
-					JOptionPane.showMessageDialog(null, "删除教务员成功", "提示", JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(null, "此教务员不存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
-				}
+		if (e.getSource() == submitButton) {
+			String selectedRole = (String) roleComboBox.getSelectedItem();
+			String userId = idField.getText().trim();
+
+			if (userId.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "请输入用户帐号！", "提示", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+
+			if (selectedRole.equals("学生")) {
+				handleUserDeletion("student", "student.txt");
+			} else if (selectedRole.equals("教师")) {
+				handleUserDeletion("teacher", "teacher.txt");
+			} else if (selectedRole.equals("教务员")) {
+				handleUserDeletion("administrator", "administrator.txt");
 			}
 		}
 	}
 
-	// 删除用户的通用方法
+	// 根据用户类型和文件处理删除操作
+	private void handleUserDeletion(String role, String fileName) {
+		if (new CheckInfo().isMember(role, idField.getText(), "000") == 2) {
+			filePath = filePath + fileName;
+			deleteUserFromFile(filePath);
+			JOptionPane.showMessageDialog(this, "删除" + role + "成功", "提示", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "此" + role + "不存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	// 从文件中删除指定的用户
 	private void deleteUserFromFile(String file) {
 		ArrayList<String> modifiedContent = new ArrayList<>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String s;
-			while ((s = br.readLine()) != null) {
-				String[] result = s.split(" ");
-				if (result[0].equals(idt.getText())) {
-					continue;
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] result = line.split(" ");
+				if (!result[0].equals(idField.getText())) {
+					modifiedContent.add(String.join(" ", result));
 				}
-				String s1 = String.join(" ", result);
-				modifiedContent.add(s1);
 			}
-			br.close();
 
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			for (String content : modifiedContent) {
-				bw.write(content);
-				bw.newLine();
+			// 写入修改后的内容
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+				for (String content : modifiedContent) {
+					bw.write(content);
+					bw.newLine();
+				}
 			}
-			bw.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
+	// 处理窗口事件（关闭窗口时的操作）
 	public void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.dispose();
 			setVisible(false);
 		}
+	}
+
+	public static void main(String[] args) {
+		new DeleteUser();
 	}
 }

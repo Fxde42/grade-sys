@@ -1,71 +1,64 @@
 package view;
 
-import java.awt.AWTEvent;
-import java.awt.Choice;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import controller.CheckInfo;
-
-import java.awt.*;
-import java.io.InputStream;
 
 public class MainFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	JTextField idTextField;
 	JPasswordField passwdTextField;
 	JLabel idLabel, passwdLabel;
-	Choice chooice;
+	JComboBox<String> chooice;
 	JButton logon;
-	JPanel contain;
 
 	int count = 0;
 
 	public MainFrame() {
 		super("账号登陆");
 		setLocation(500, 300);
-		setSize(500, 378);
+		setSize(400, 300);  // 适当调整窗口大小
 
 		// 使用自定义的BackgroundPanel
 		BackgroundPanel backgroundPanel = new BackgroundPanel("data/Uestc.jpg");
 		backgroundPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.insets = new Insets(5, 5, 5, 5);  // 设置组件之间的间距
 
 		idLabel = new JLabel("ID号");
 		passwdLabel = new JLabel("密码");
-		idTextField = new JTextField(15);
-		passwdTextField = new JPasswordField(15);
+		idTextField = new JTextField(20);  // 设置合适的输入框宽度
+		passwdTextField = new JPasswordField(20);  // 设置合适的输入框宽度
 		logon = new JButton("登陆");
-		chooice = new Choice();
+
+		// 使用JComboBox代替Choice
+		chooice = new JComboBox<>();
 		chooice.addItem("学生");
 		chooice.addItem("教师");
 		chooice.addItem("系统管理员");
 
+		// 设置布局管理器的对齐方式
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		backgroundPanel.add(idLabel, gbc);
+
 		gbc.gridx = 1;
 		backgroundPanel.add(idTextField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		backgroundPanel.add(passwdLabel, gbc);
+
 		gbc.gridx = 1;
 		backgroundPanel.add(passwdTextField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		backgroundPanel.add(new JLabel("角色:"), gbc);
+
 		gbc.gridx = 1;
 		backgroundPanel.add(chooice, gbc);
 
@@ -79,6 +72,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == logon) {
 			String ch = (String) chooice.getSelectedItem();
@@ -142,14 +136,6 @@ public class MainFrame extends JFrame implements ActionListener {
 					}
 				}
 			}
-		}
-	}
-
-	public void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			this.dispose();
-			setVisible(false);
-			System.exit(0);
 		}
 	}
 

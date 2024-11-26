@@ -8,119 +8,117 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class AddUser extends JFrame implements ActionListener {
-	/*
-	 * 教务管理员添加用户，可以添加学生，教师，管理员
-	 */
+	// 界面组件
 	private JPanel contain;
-	private JLabel id, name, birthday, institute, major;
-	private JTextField idt, namet, birthdayt, institutet, majort;
-	private Checkbox check1, check2;
-	private CheckboxGroup group;
-	private JButton submit;
-	private Choice choice;
+	private JLabel idLabel, nameLabel, birthdayLabel, instituteLabel, majorLabel;
+	private JTextField idField, nameField, birthdayField, instituteField, majorField;
+	private JRadioButton maleRadioButton, femaleRadioButton;
+	private JButton submitButton;
+	private JComboBox<String> userTypeComboBox;
+	private ButtonGroup genderGroup;
 
-	private String file = System.getProperty("user.dir") + "/data/";
+	private String filePath = System.getProperty("user.dir") + "/data/";
 
 	public AddUser() {
 		super("添加用户");
 		setSize(350, 400);
 		setLocation(600, 400);
 
-		// Initialize components
+		// 初始化组件
 		contain = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5); // 设置组件间距
 
-		id = new JLabel("帐号");
-		name = new JLabel("姓名");
-		group = new CheckboxGroup();
-		check1 = new Checkbox("男", group, true);
-		check2 = new Checkbox("女", group, false);
-		birthday = new JLabel("生日");
-		institute = new JLabel("学院");
-		major = new JLabel("专业");
+		idLabel = new JLabel("帐号");
+		nameLabel = new JLabel("姓名");
+		birthdayLabel = new JLabel("生日");
+		instituteLabel = new JLabel("学院");
+		majorLabel = new JLabel("专业");
 
-		submit = new JButton("提交");
-		choice = new Choice();
-		choice.addItem("学生");
-		choice.addItem("教师");
-		choice.addItem("教务员");
+		maleRadioButton = new JRadioButton("男", true);
+		femaleRadioButton = new JRadioButton("女");
 
-		idt = new JTextField();
-		namet = new JTextField();
-		birthdayt = new JTextField();
-		institutet = new JTextField();
-		majort = new JTextField();
+		// 使用 ButtonGroup 确保只能选择一个性别
+		genderGroup = new ButtonGroup();
+		genderGroup.add(maleRadioButton);
+		genderGroup.add(femaleRadioButton);
 
-		// Layout setup using GridBagLayout
+		submitButton = new JButton("提交");
+		userTypeComboBox = new JComboBox<>(new String[]{"学生", "教师", "教务员"});
+
+		idField = new JTextField();
+		nameField = new JTextField();
+		birthdayField = new JTextField();
+		instituteField = new JTextField();
+		majorField = new JTextField();
+
+		// 布局设置
 		gbc.fill = GridBagConstraints.HORIZONTAL;
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		contain.add(id, gbc);
-
+		contain.add(idLabel, gbc);
 		gbc.gridx = 1;
-		contain.add(idt, gbc);
+		contain.add(idField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		contain.add(name, gbc);
-
+		contain.add(nameLabel, gbc);
 		gbc.gridx = 1;
-		contain.add(namet, gbc);
+		contain.add(nameField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		contain.add(birthday, gbc);
-
+		contain.add(birthdayLabel, gbc);
 		gbc.gridx = 1;
-		contain.add(birthdayt, gbc);
+		contain.add(birthdayField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
-		contain.add(institute, gbc);
-
+		contain.add(instituteLabel, gbc);
 		gbc.gridx = 1;
-		contain.add(institutet, gbc);
+		contain.add(instituteField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 4;
-		contain.add(major, gbc);
-
+		contain.add(majorLabel, gbc);
 		gbc.gridx = 1;
-		contain.add(majort, gbc);
+		contain.add(majorField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 5;
-		contain.add(check1, gbc);
-
+		contain.add(maleRadioButton, gbc);
 		gbc.gridx = 1;
-		contain.add(check2, gbc);
+		contain.add(femaleRadioButton, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
-		contain.add(choice, gbc);
+		contain.add(userTypeComboBox, gbc);
 
 		gbc.gridx = 1;
-		contain.add(submit, gbc);
+		contain.add(submitButton, gbc);
 
-		// Button action listener
-		submit.addActionListener(this);
+		// 按钮点击事件
+		submitButton.addActionListener(this);
 
-		// Add panel to frame
+		// 添加面板到窗口
 		add(contain);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
-		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == submit) {
-			if ((idt.getText().equals("")) || (namet.getText().equals("")) || (birthdayt.getText().equals(""))
-					|| (institutet.getText().equals("")) || (majort.getText().equals(""))) {
-				JOptionPane.showMessageDialog(null, "信息不能为空！", "提示", JOptionPane.INFORMATION_MESSAGE);
+		if (e.getSource() == submitButton) {
+			// 验证输入
+			if (idField.getText().isEmpty() || nameField.getText().isEmpty() ||
+					birthdayField.getText().isEmpty() || instituteField.getText().isEmpty() || majorField.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "信息不能为空！", "提示", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				String ch = (String) choice.getSelectedItem();
-				if (ch.equals("学生")) {
+				String userType = (String) userTypeComboBox.getSelectedItem();
+				if (userType.equals("学生")) {
 					handleUserAddition("student.txt", "学生");
-				} else if (ch.equals("教师")) {
+				} else if (userType.equals("教师")) {
 					handleUserAddition("teacher.txt", "教师");
 				} else {
 					handleUserAddition("administrator.txt", "教务员");
@@ -130,29 +128,28 @@ public class AddUser extends JFrame implements ActionListener {
 	}
 
 	private void handleUserAddition(String fileName, String userType) {
-		if ((new CheckInfo().isMember(userType, idt.getText(), namet.getText())) == 2) {
-			JOptionPane.showMessageDialog(null, "此" + userType + "已经存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
+		// 检查是否已存在此用户
+		if (new CheckInfo().isMember(userType, idField.getText(), nameField.getText()) == 2) {
+			JOptionPane.showMessageDialog(this, "此" + userType + "已经存在！", "提示", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			file = file + fileName;
+			filePath = filePath + fileName;
 
 			ArrayList<String> modifiedContent = new ArrayList<>();
-			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-				String s;
-				while ((s = br.readLine()) != null) {
-					String[] result = s.split(" ");
-					String s1 = String.join(" ", result);
-					modifiedContent.add(s1);
+			try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					modifiedContent.add(line);
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 
-			String gender = check1.getState() ? "male" : "female";
-			String user = idt.getText() + " " + "123456" + " " + namet.getText() + " " + gender + " " +
-					birthdayt.getText() + " " + institutet.getText() + " " + majort.getText();
+			String gender = maleRadioButton.isSelected() ? "male" : "female";
+			String user = idField.getText() + " " + "123456" + " " + nameField.getText() + " " + gender + " " +
+					birthdayField.getText() + " " + instituteField.getText() + " " + majorField.getText();
 			modifiedContent.add(user);
 
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
 				for (String entry : modifiedContent) {
 					bw.write(entry);
 					bw.newLine();
@@ -161,14 +158,18 @@ public class AddUser extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 
-			JOptionPane.showMessageDialog(null, "成功添加一个" + userType + "！", "提示", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "成功添加一个" + userType + "！", "提示", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
+	// 关闭窗口时调用
 	public void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.dispose();
-			setVisible(false);
 		}
+	}
+
+	public static void main(String[] args) {
+		new AddUser();
 	}
 }

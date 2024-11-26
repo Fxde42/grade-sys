@@ -5,10 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.*;
+import java.util.ArrayList;
+
 
 @SuppressWarnings("serial")
 public class GradeEnter extends JFrame implements ActionListener {
@@ -16,7 +15,7 @@ public class GradeEnter extends JFrame implements ActionListener {
 	 * 教师登录课程信息
 	 */
 	String teacherId; // 教师号
-	JPanel mainPanel;
+	JPanel mainPanel, gradePanel;
 	JLabel courseIdLabel, studentIdLabel, studentNameLabel, studentGradeLabel;
 	JTextField courseIdField, studentIdField, studentNameField, studentGradeField;
 	JButton submitButton, gradeSubmitButton;
@@ -33,23 +32,29 @@ public class GradeEnter extends JFrame implements ActionListener {
 		mainPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
+		// 初始化组件
 		courseIdLabel = new JLabel("课程号:");
 		courseIdField = new JTextField(15);
 		submitButton = new JButton("提交");
 
-		// 添加组件到主面板
-		gbc.insets = new Insets(10, 10, 10, 10); // 外边距
+		// 设置组件间距
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		// 添加课程号标签和文本框到主面板
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		mainPanel.add(courseIdLabel, gbc);
 
 		gbc.gridx = 1;
+		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		mainPanel.add(courseIdField, gbc);
 
-		gbc.gridy = 1;
+		// 添加提交按钮
 		gbc.gridx = 1;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainPanel.add(submitButton, gbc);
 
@@ -77,14 +82,16 @@ public class GradeEnter extends JFrame implements ActionListener {
 		}
 	}
 
+	// 打开成绩录入窗口
 	private void openGradeEntryWindow() {
 		JFrame gradeFrame = new JFrame("录入成绩");
 		gradeFrame.setSize(400, 300);
 		gradeFrame.setLocationRelativeTo(null);
 
-		JPanel gradePanel = new JPanel(new GridBagLayout());
+		gradePanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
+		// 初始化组件
 		studentIdLabel = new JLabel("学号:");
 		studentIdField = new JTextField(15);
 		studentNameLabel = new JLabel("姓名:");
@@ -93,37 +100,46 @@ public class GradeEnter extends JFrame implements ActionListener {
 		studentGradeField = new JTextField(15);
 		gradeSubmitButton = new JButton("提交");
 
+		// 设置组件间距
 		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 
+		// 添加学号
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		gradePanel.add(studentIdLabel, gbc);
 
 		gbc.gridx = 1;
+		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.WEST;
 		gradePanel.add(studentIdField, gbc);
 
-		gbc.gridy = 1;
+		// 添加姓名
 		gbc.gridx = 0;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		gradePanel.add(studentNameLabel, gbc);
 
 		gbc.gridx = 1;
+		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gradePanel.add(studentNameField, gbc);
 
-		gbc.gridy = 2;
+		// 添加成绩
 		gbc.gridx = 0;
+		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		gradePanel.add(studentGradeLabel, gbc);
 
 		gbc.gridx = 1;
+		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gradePanel.add(studentGradeField, gbc);
 
-		gbc.gridy = 3;
+		// 添加提交按钮
 		gbc.gridx = 1;
+		gbc.gridy = 3;
 		gbc.anchor = GridBagConstraints.CENTER;
 		gradePanel.add(gradeSubmitButton, gbc);
 
@@ -133,6 +149,7 @@ public class GradeEnter extends JFrame implements ActionListener {
 		gradeFrame.setVisible(true);
 	}
 
+	// 检查课程是否存在
 	private int hasThisCourse(String courseId) {
 		String file = System.getProperty("user.dir") + "/data/course.txt";
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -149,6 +166,7 @@ public class GradeEnter extends JFrame implements ActionListener {
 		return 0;
 	}
 
+	// 检查该学生是否在此课程中
 	private boolean hasThisStudent() {
 		String studentId = studentIdField.getText();
 		String path = System.getProperty("user.dir") + "/data/course_student";
@@ -170,6 +188,7 @@ public class GradeEnter extends JFrame implements ActionListener {
 		return false;
 	}
 
+	// 保存成绩数据
 	private void saveGradeData() {
 		String gradeInfo = String.format("%s %s %s", studentIdField.getText(), studentNameField.getText(),
 				studentGradeField.getText());
@@ -185,6 +204,7 @@ public class GradeEnter extends JFrame implements ActionListener {
 		}
 	}
 
+	// 处理窗口关闭事件
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {

@@ -1,5 +1,7 @@
 package controller;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,123 +9,151 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 @SuppressWarnings("serial")
 public class CourseView extends JFrame {
 	/*
 	 * 学生查询课程，教师查询所教授课程
 	 */
-	
-	JPanel contain;
-	JTextArea list;
-	
+	private JPanel contain;
+
 	public CourseView(String id, int flag) {
-		super("课程");
-		setSize(330, 400);
-		contain = new JPanel();
+		super("课程查询");
+
+		setSize(600, 400);
 		setLocation(600, 400);
-		list = new JTextArea();
-		list.setEditable(false);
-		contain.add(list);
-		list.append("课程编号\t课程名\t学分\t学时\n");
-		
-		String courseid;
-		String coursename;
-		String credit = null;
-		String classhour = null;
-		
-		if(flag == 0){   // 学生查询课程
-			
-			// String path = "D://test//course_student";
-			String path = System.getProperty("user.dir")+"/data/course_student";
-			List<String> files = new ArrayList<String>(); // 目录下所有文件
-			File file = new File(path);
-			File[] tempList = file.listFiles();
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 窗口关闭时不退出程序
 
-			for (int i = 0; i < tempList.length; i++) {
-				if (tempList[i].isFile()) {
-					files.add(tempList[i].toString());
-					// 文件名，不包含路径
-					// String fileName = tempList[i].getName();
-				}
-				if (tempList[i].isDirectory()) {
-					// 这里就不递归了
-				}
+		contain = new JPanel();
+		contain.setLayout(new BoxLayout(contain, BoxLayout.Y_AXIS)); // 使用垂直排列
+		JScrollPane scrollPane = new JScrollPane(contain); // 使用滚动面板来显示内容
+
+		// 创建表头部分，使用 JPanel 来承载
+		JPanel headerPanel = new JPanel(new GridLayout(1, 4, 10, 0)); // 表头使用 GridLayout 来确保内容对齐
+		headerPanel.setBackground(Color.LIGHT_GRAY);
+
+		// 表头内容
+		String[] headers = {"课程编号", "课程名", "学分", "学时"};
+		for (String header : headers) {
+			JLabel label = new JLabel(header, SwingConstants.CENTER);
+			label.setFont(new Font("Arial", Font.BOLD, 16)); // 表头字体
+			headerPanel.add(label);
+		}
+
+		contain.add(headerPanel); // 将表头添加到面板中
+
+		// 读取数据
+		if (flag == 0) {
+			// 学生查询课程
+			loadCoursesForStudent(id);
+		} else if (flag == 1) {
+			// 教师查询自己教授课程
+			loadCoursesForTeacher(id);
+		}
+
+		// 将滚动面板添加到窗口
+		add(scrollPane);
+		setVisible(true);
+	}
+
+	// 学生查询课程方法
+	private void loadCoursesForStudent(String id) {
+		String path = System.getProperty("user.dir") + "/data/course_student";
+		List<String> files = new ArrayList<>();
+		File file = new File(path);
+		File[] tempList = file.listFiles();
+
+		for (File tempFile : tempList) {
+			if (tempFile.isFile()) {
+				files.add(tempFile.toString());
 			}
+		}
 
-			try {
-				for (int i = 0; i < files.size(); i++) {
-					BufferedReader br = new BufferedReader(new FileReader(files.get(i)));
-					String s = null;
-					while ((s = br.readLine()) != null) {// 使用readLine方法，一次读一行
-						String[] result = s.split(" ");
-						if (result[2].equals(id)) {      // 学生学号相等时
-							courseid = result[0];
-							coursename = result[1];
-							
-
-							String path1 = System.getProperty("user.dir")+"/data/course.txt";
-							BufferedReader br1 = new BufferedReader(
-									new FileReader(path1));        // 构造一个BufferedReader类来读取文件
-
-							while ((s = br1.readLine()) != null) { // 使用readLine方法，一次读一行
-								String[] result1 = s.split(" ");
-								if (result[0].equals(result1[0])) {
-									credit = result1[2];
-									classhour = result1[3];
-								}
-							}
-
-							list.append(courseid + "\t");
-							list.append(coursename + "\t");
-							list.append(credit + "\t");
-							list.append(classhour + "\n");
-
-							br1.close();
-						}
-
-					}
-
-					br.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else if(flag == 1){      // 教师查询自己教授课程
-			String path = System.getProperty("user.dir")+"/data/course.txt";
-			// String path = "D://test//course.txt";
-			String s = null;
-		     
-            try {
-            	BufferedReader br = new BufferedReader(new FileReader(path));
-				while((s = br.readLine())!=null){   //使用readLine方法，一次读一行
+		// 读取文件，显示相关课程信息
+		try {
+			for (String filePath : files) {
+				BufferedReader br = new BufferedReader(new FileReader(filePath));
+				String s;
+				while ((s = br.readLine()) != null) {
 					String[] result = s.split(" ");
-					if(result[4].equals(id)){
-						courseid = result[0];
-						coursename = result[1];
-						credit = result[2];
-	            		classhour = result[3];
-	            		
-	            		list.append(courseid + "\t");
-						list.append(coursename + "\t");
-						list.append(credit + "\t");
-						list.append(classhour + "\n");
-	            		
+					if (result[2].equals(id)) { // 学生学号相等时
+						String courseid = result[0];
+						String coursename = result[1];
+
+						// 读取课程详情
+						loadCourseDetails(courseid, coursename);
 					}
 				}
 				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
+	}
 
-		
-		add(contain);
-		setVisible(true);
+	// 教师查询课程方法
+	private void loadCoursesForTeacher(String id) {
+		String path = System.getProperty("user.dir") + "/data/course.txt";
+		String s;
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			while ((s = br.readLine()) != null) {
+				String[] result = s.split(" ");
+				if (result[4].equals(id)) { // 教师ID相等时
+					String courseid = result[0];
+					String coursename = result[1];
+					String credit = result[2];
+					String classhour = result[3];
+
+					// 添加课程信息
+					addCourseToPanel(courseid, coursename, credit, classhour);
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 加载课程详细信息
+	private void loadCourseDetails(String courseid, String coursename) {
+		String path = System.getProperty("user.dir") + "/data/course.txt";
+		String s;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			while ((s = br.readLine()) != null) {
+				String[] result = s.split(" ");
+				if (courseid.equals(result[0])) {
+					String credit = result[2];
+					String classhour = result[3];
+
+					// 添加课程信息
+					addCourseToPanel(courseid, coursename, credit, classhour);
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 添加课程到面板
+	private void addCourseToPanel(String courseid, String coursename, String credit, String classhour) {
+		// 创建一个新的 JPanel 来包含每行数据，使用 GridLayout 来确保对齐
+		JPanel dataPanel = new JPanel(new GridLayout(1, 4, 10, 0)); // 4列，水平间隔10
+
+		// 添加数据内容到面板
+		dataPanel.add(new JLabel(courseid, SwingConstants.CENTER));
+		dataPanel.add(new JLabel(coursename, SwingConstants.CENTER));
+		dataPanel.add(new JLabel(credit, SwingConstants.CENTER));
+		dataPanel.add(new JLabel(classhour, SwingConstants.CENTER));
+
+		contain.add(dataPanel); // 将每一行数据添加到面板中
+	}
+
+	public static void main(String[] args) {
+		// 测试界面
+		new CourseView("testStudentID", 0); // 学生查询课程
+		// new CourseView("testTeacherID", 1); // 教师查询课程
 	}
 }

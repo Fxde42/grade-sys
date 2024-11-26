@@ -1,23 +1,15 @@
 package view;
 
-import java.awt.AWTEvent;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import controller.CourseView;
 import controller.EditInfo;
 import controller.GradeInfo;
 import controller.Info;
 
-@SuppressWarnings("serial")
 public class StudentsPanel extends JFrame implements ActionListener {
 	/*
 	 * 学生登陆后操作主界面
@@ -30,54 +22,51 @@ public class StudentsPanel extends JFrame implements ActionListener {
 		super("学生");
 		this.id = id;
 		setLocation(500, 300);
-		setSize(300, 340);
+		setSize(300, 380); // 调整窗口高度以适应增加的间距
 
+		// 使用 Swing 布局
 		contain = new JPanel();
-		contain.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contain.setLayout(new BoxLayout(contain, BoxLayout.Y_AXIS)); // 垂直布局
 
-		infoButton = new JButton("信息查询");
-		gradeButton = new JButton("成绩查询");
-		courseButton = new JButton("课程查询");
-		editButton = new JButton("修改信息");
-		exitButton = new JButton("退出登录");
+		// 添加顶部间距
+		contain.add(Box.createVerticalStrut(20)); // 顶部间距
 
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		contain.add(infoButton, gbc);
+		// 设置每个按钮的外观
+		infoButton = createButton("信息查询");
+		gradeButton = createButton("成绩查询");
+		courseButton = createButton("课程查询");
+		editButton = createButton("修改信息");
+		exitButton = createButton("退出登录");
 
-		gbc.gridy = 1;
-		contain.add(gradeButton, gbc);
+		// 将按钮添加到面板并增加按钮之间的间距
+		contain.add(infoButton);
+		contain.add(Box.createVerticalStrut(15)); // 按钮之间的间距
+		contain.add(gradeButton);
+		contain.add(Box.createVerticalStrut(15));
+		contain.add(courseButton);
+		contain.add(Box.createVerticalStrut(15));
+		contain.add(editButton);
+		contain.add(Box.createVerticalStrut(15));
+		contain.add(exitButton);
 
-		gbc.gridy = 2;
-		contain.add(courseButton, gbc);
-
-		gbc.gridy = 3;
-		contain.add(editButton, gbc);
-
-		gbc.gridy = 4;
-		contain.add(exitButton, gbc);
-
-		infoButton.addActionListener(this);
-		gradeButton.addActionListener(this);
-		courseButton.addActionListener(this);
-		editButton.addActionListener(this);
-		exitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// 关闭当前窗口
-				dispose();
-				// 返回到主界面
-				new MainFrame();
-			}
-		});
-
+		// 设置窗体内容
 		add(contain);
 		setVisible(true);
-		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// 启用窗口关闭事件
+		setResizable(false);
 	}
 
+	// 创建按钮并为按钮添加事件处理
+	private JButton createButton(String text) {
+		JButton button = new JButton(text);
+		button.setAlignmentX(Component.CENTER_ALIGNMENT); // 按钮居中对齐
+		button.addActionListener(this);
+		return button;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == infoButton) {
 			new Info(id, 1);
@@ -91,13 +80,14 @@ public class StudentsPanel extends JFrame implements ActionListener {
 		if (e.getSource() == editButton) {
 			new EditInfo(id, 0);
 		}
+		if (e.getSource() == exitButton) {
+			dispose(); // 关闭当前窗口
+			new MainFrame(); // 返回到主界面
+		}
 	}
 
-	public void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			this.dispose();
-			setVisible(false);
-			System.exit(0);
-		}
+	public static void main(String[] args) {
+		// 测试界面
+		new StudentsPanel("testStudentID");
 	}
 }
