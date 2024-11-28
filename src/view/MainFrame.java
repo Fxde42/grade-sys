@@ -57,7 +57,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		backgroundPanel.add(new JLabel("角色:"), gbc);
+		backgroundPanel.add(new JLabel("身份:"), gbc);
 
 		gbc.gridx = 1;
 		backgroundPanel.add(chooice, gbc);
